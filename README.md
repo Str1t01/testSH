@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title> счетчик </title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        #counter {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            z-index: 1000;
+            padding: 20px 40px;
+            border: 3px solid #ff0000;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.7);
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
+            text-align: center;
+        }
+
+        #counter::before {
+            content: "⬤⬤⬤";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ff0000;
+        }
+
+        #counter::after {
+            content: "⬤⬤⬤";
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #ff0000;
+        }
+
+        #scare {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 999;
+        }
+
+        #warning {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 24px;
+            z-index: 1001;
+            display: none;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div id="counter">0</div>
+    <img id="scare" src="https://cs12.pikabu.ru/post_img/2022/01/19/8/1642598812177585946.jpg">
+    <audio id="sound" src="jenskiy-krik-ujasa-29477.mp3"></audio>
+
+    <script>
+        let clickCount = 0;
+        const counter = document.getElementById('counter');
+        const scare = document.getElementById('scare');
+        const sound = document.getElementById('sound');
+        const warning = document.getElementById('warning');
+
+        function showScare() {
+            scare.style.display = 'block';
+            sound.play();
+            setTimeout(() => {
+                scare.style.display = 'none';
+                clickCount = 0;
+                counter.textContent = '0';
+            }, 3000);
+        }
+
+        function showWarning() {
+            warning.style.display = 'block';
+            setTimeout(() => {
+                warning.style.display = 'none';
+            }, 1000);
+        }
+
+        document.body.addEventListener('click', () => {
+            clickCount++;
+            counter.textContent = clickCount;
+            counter.style.borderColor = `hsl(${clickCount * 30}, 100%, 50%)`;
+            counter.style.boxShadow = `0 0 30px hsl(${clickCount * 30}, 100%, 50%)`;
+
+            if (clickCount >= 7 && clickCount < 10) {
+                showWarning();
+            }
+
+            if (clickCount === 10) {
+                showScare();
+                counter.style.borderColor = '#ff0000';
+                counter.style.boxShadow = '0 0 20px rgba(255,0,0,0.5)';
+            }
+        });
+    </script>
+</body>
+</html>
